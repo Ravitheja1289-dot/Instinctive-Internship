@@ -4,10 +4,10 @@ import path from 'path'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  context: { params: { path: string[] } }
 ) {
   try {
-    const { path: filePath } = params
+    const { path: filePath } = context.params
     const fileName = filePath.join('/')
     
     // Construct the full path to the video file
