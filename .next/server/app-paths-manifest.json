@@ -1,0 +1,4 @@
+{
+  "/api/video/[...path]/route": "app/api/video/[...path]/route.js",
+  "/page": "app/page.js"
+}

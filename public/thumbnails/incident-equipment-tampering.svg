@@ -1,0 +1,7 @@
+<svg width="320" height="240" xmlns="http://www.w3.org/2000/svg">
+  <rect width="320" height="240" fill="#2563EB"/>
+  <rect x="10" y="10" width="300" height="220" fill="#3B82F6" opacity="0.2"/>
+  <text x="160" y="110" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">EQUIPMENT TAMPERING</text>
+  <text x="160" y="130" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24">🔧</text>
+  <text x="160" y="155" text-anchor="middle" fill="#DBEAFE" font-family="Arial, sans-serif" font-size="12">DEVICE INTERFERENCE</text>
+</svg>
