@@ -4,10 +4,10 @@ import { prisma } from '@/lib/db'
 // GET /api/incidents/[id] - Get a specific incident
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params
+    const { id } = context.params
 
     const incident = await prisma.incident.findUnique({
       where: { id },
@@ -36,10 +36,10 @@ export async function GET(
 // PUT /api/incidents/[id] - Update an incident
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params
+    const { id } = context.params
     const body = await request.json()
 
     // Validate required fields
@@ -92,10 +92,10 @@ export async function PUT(
 // DELETE /api/incidents/[id] - Delete an incident
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params
+    const { id } = context.params
 
     // Check if incident exists
     const incident = await prisma.incident.findUnique({

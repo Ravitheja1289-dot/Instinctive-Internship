@@ -1,13 +1,23 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from export async function PUT(
+  request: NextRequest,
+  context: { parexport async function DELETE(
+  request: NextRequest,
+  context: { params: { id: string } }
+) {
+  try {
+    const { id } = context.params; id: string } }
+) {
+  try {
+    const { id } = context.params;server'
 import { prisma } from '@/lib/db'
 
 // GET /api/cameras/[id] - Get a specific camera
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params
+    const { id } = context.params
     const { searchParams } = new URL(request.url)
     const includeIncidents = searchParams.get('includeIncidents') === 'true'
 

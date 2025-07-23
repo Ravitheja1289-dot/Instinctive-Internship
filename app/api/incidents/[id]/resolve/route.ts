@@ -3,10 +3,10 @@ import { prisma } from '@/lib/db'
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params
+    const { id } = context.params
 
     // First get the current incident to flip the resolved status
     const currentIncident = await prisma.incident.findUnique({
