@@ -53,7 +53,7 @@ async function main() {
     'Gun Threat': 0.02, // Very rare but critical
   }
 
-  const incidents = []
+  const incidents: any[] = []
 
   // Generate incidents over the past 24 hours with realistic patterns
   const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)

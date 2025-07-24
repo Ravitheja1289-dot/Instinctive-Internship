@@ -30,14 +30,12 @@ export async function GET(request: NextRequest) {
             {
               type: {
                 contains: query,
-                mode: 'insensitive',
               },
             },
             {
               camera: {
                 name: {
                   contains: query,
-                  mode: 'insensitive',
                 },
               },
             },
@@ -45,7 +43,6 @@ export async function GET(request: NextRequest) {
               camera: {
                 location: {
                   contains: query,
-                  mode: 'insensitive',
                 },
               },
             },
@@ -71,13 +68,11 @@ export async function GET(request: NextRequest) {
             {
               name: {
                 contains: query,
-                mode: 'insensitive',
               },
             },
             {
               location: {
                 contains: query,
-                mode: 'insensitive',
               },
             },
           ],
