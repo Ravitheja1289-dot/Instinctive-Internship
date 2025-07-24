@@ -129,8 +129,11 @@ export async function GET(request: NextRequest) {
         WHERE tsStart >= ${startDate}
         GROUP BY DATE(tsStart), HOUR(tsStart)
         ORDER BY DATE(tsStart), HOUR(tsStart)
-      ` as any[]
+      `
     ])
+
+    // Cast incidentsOverTime to proper type
+    const timeSeriesData = incidentsOverTime as any[]
 
     // Get camera names for incident by camera stats
     const cameraIds = incidentsByCamera.map(item => item.cameraId)
@@ -200,7 +203,7 @@ export async function GET(request: NextRequest) {
         count: item._count.id,
       })),
       incidentsByCamera: formattedIncidentsByCamera,
-      incidentsOverTime,
+      incidentsOverTime: timeSeriesData,
     }
 
     return NextResponse.json(stats)

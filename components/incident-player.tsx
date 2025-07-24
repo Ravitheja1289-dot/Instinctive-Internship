@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Play, Pause, Volume2, Maximize, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 interface Camera {
   id: string;
@@ -214,9 +215,11 @@ export function IncidentPlayer({ incident }: { incident: Incident | null }) {
                 key={camera.id}
                 className="relative w-20 h-12 bg-gray-800 rounded border border-gray-700 cursor-pointer hover:border-amber-500 transition-colors flex-shrink-0 overflow-hidden"
               >
-                <img 
+                <Image 
                   src={`/camera-thumb-${(index % 2) + 1}.svg`}
                   alt={camera.name}
+                  width={80}
+                  height={48}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;

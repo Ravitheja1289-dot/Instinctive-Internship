@@ -1,4 +1,4 @@
-// File: c:\Ravitheja Reddy\Github Projects Collab\Projects\Instinctive Internship\app\api\video\[...path]\route.ts
+// File: c:\Ravitheja Reddy\Github Projects Collab\Projects\Instinctive-Internship\app\api\video\[...path]\route.ts
 import * as entry from '../../../../../../app/api/video/[...path]/route.js'
 import type { NextRequest } from 'next/server.js'
 

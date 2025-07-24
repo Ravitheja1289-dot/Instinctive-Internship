@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Check, Clock, MapPin, RefreshCw, AlertTriangle } from 'lucide-react'
 import { useState, useTransition } from 'react'
 import { format } from 'date-fns'
+import Image from 'next/image'
 
 interface Incident {
   id: string
@@ -179,9 +180,11 @@ function IncidentItem({
       <div className="flex items-start space-x-2 sm:space-x-3">
         {/* Thumbnail */}
         <div className="w-16 h-12 sm:w-24 sm:h-16 bg-black rounded flex items-center justify-center flex-shrink-0 overflow-hidden">
-          <img
+          <Image
             src={incident.thumbnailUrl || `/thumbnails/incident-${incident.type.toLowerCase().replace(/ /g, '-')}.svg`}
             alt={`${incident.type} incident`}
+            width={96}
+            height={64}
             className="w-full h-full object-cover"
             onError={(e) => {
               // Fallback to icon if image fails to load

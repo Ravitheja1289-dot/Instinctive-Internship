@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
+interface RouteParams {
+  params: Promise<{ id: string }>
+}
+
 // GET /api/incidents/[id] - Get a specific incident
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
-    const { id } = context.params
+    const { id } = await params
 
     const incident = await prisma.incident.findUnique({
       where: { id },
@@ -36,10 +40,10 @@ export async function GET(
 // PUT /api/incidents/[id] - Update an incident
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
-    const { id } = context.params
+    const { id } = await params
     const body = await request.json()
 
     // Validate required fields
@@ -92,10 +96,10 @@ export async function PUT(
 // DELETE /api/incidents/[id] - Delete an incident
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
-    const { id } = context.params
+    const { id } = await params
 
     // Check if incident exists
     const incident = await prisma.incident.findUnique({
