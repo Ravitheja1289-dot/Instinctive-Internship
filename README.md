@@ -1,6 +1,6 @@
 # SecureSight CCTV Dashboard
 
-A comprehensive CCTV monitoring dashboard built with Next.js 15, featuring real-time incident management and monitoring capabilities.
+A comprehensive CCTV monitoring dashboard built with Next.js 15, featuring real-time incident management and monitoring capabilities. Deploy-ready with Vercel support.
 
 ## Features
 
