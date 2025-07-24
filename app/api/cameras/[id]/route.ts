@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
-interface RouteParams {
-  params: Promise<{ id: string }>
-}
-
 // GET /api/cameras/[id] - Get a specific camera
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params
+    const { id } = params
     const { searchParams } = new URL(request.url)
     const includeIncidents = searchParams.get('includeIncidents') === 'true'
     
@@ -41,9 +37,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 // PUT /api/cameras/[id] - Update a specific camera
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params
+    const { id } = params
     const body = await request.json()
     
     // Check if camera exists
@@ -111,9 +107,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 }
 
 // DELETE /api/cameras/[id] - Delete a specific camera
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params
+    const { id } = params
     
     // Check if camera exists
     const existingCamera = await prisma.camera.findUnique({

@@ -1,16 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
-interface RouteParams {
-  params: Promise<{ id: string }>
-}
-
 export async function PATCH(
   request: NextRequest,
-  { params }: RouteParams
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params
+    const { id } = params
 
     // First get the current incident to flip the resolved status
     const currentIncident = await prisma.incident.findUnique({

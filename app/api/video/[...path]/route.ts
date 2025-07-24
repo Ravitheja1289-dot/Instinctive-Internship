@@ -2,16 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 
-interface RouteParams {
-  params: Promise<{ path: string[] }>
-}
-
 export async function GET(
   request: NextRequest,
-  { params }: RouteParams
+  { params }: { params: { path: string[] } }
 ) {
   try {
-    const { path: filePath } = await params
+    const { path: filePath } = params
     const fileName = filePath.join('/')
     
     // Construct the full path to the video file
