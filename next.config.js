@@ -1,30 +1,40 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Remove any conflicting route configurations
-  // Don't use both 'routes' and any of: 'rewrites', 'redirects', 'headers', etc.
-  
-  // Example of a clean config:
+  // Basic configuration
   reactStrictMode: true,
   swcMinify: true,
   
-  // Don't include both of these types of configurations together
-  /* 
+  // Remove any conflicting route configurations
+  experimental: {
+    // Disable appDir if you're using Pages Router
+    // appDir: false,
+  },
+  
+  // Choose ONE approach to routing, not multiple:
+  // If you use App Router, make sure you don't have conflicting pages in /pages
+  
+  // If you need redirects, use this (but remove any 'routes' config elsewhere)
+  async redirects() {
+    return [];
+  },
+  
+  // Only include one of these routing mechanisms
+  /*
   async rewrites() {
     return [];
   },
-  */
   
-  /* 
-  // Remove this if you have rewrites, redirects, etc.
   async headers() {
     return [];
   },
   */
-
-  // Images configuration if needed
+  
+  // Other configuration settings
   images: {
     domains: ['localhost'],
   },
+  
+  // Ensure no 'routes' property is defined at the top level
 };
 
 module.exports = nextConfig;

@@ -1,5 +1,9 @@
 {
-  "buildCommand": "npm run vercel:build",
+  "version": 2,
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "framework": "nextjs",
+  "installCommand": "npm install",
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 10
@@ -9,12 +13,6 @@
     {
       "source": "/camera-footage/(.*)",
       "destination": "/api/video/$1"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/fallback.html",
-      "dest": "/fallback.html"
     }
   ],
   "headers": [
