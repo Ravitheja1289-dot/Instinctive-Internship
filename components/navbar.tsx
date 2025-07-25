@@ -1,11 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Bell, Camera, Users, AlertTriangle, LayoutDashboard, Film, Menu, X } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
+  
+  const isActive = (path: string) => pathname === path
 
   return (
     <nav className="border-b border-[#2a231a] bg-gradient-to-r from-[#19181c] via-[#23201e] to-[#2a231a] text-white px-4 sm:px-8 py-3 shadow-lg">
@@ -16,11 +21,21 @@ export function Navbar() {
             <span className="text-lg sm:text-xl font-bold tracking-wide text-white">MANDLACX</span>
           </div>
           <div className="hidden md:flex items-center space-x-4 lg:space-x-8 text-sm font-medium ml-8">
-            <a href="#" className="flex items-center gap-2 text-amber-400 hover:text-amber-300"><LayoutDashboard className="h-5 w-5" />Dashboard</a>
-            <a href="#" className="flex items-center gap-2 text-gray-300 hover:text-amber-300"><Camera className="h-5 w-5" />Cameras</a>
-            <a href="#" className="flex items-center gap-2 text-gray-300 hover:text-amber-300"><Film className="h-5 w-5" />Scenes</a>
-            <a href="#" className="flex items-center gap-2 text-gray-300 hover:text-amber-300"><AlertTriangle className="h-5 w-5" />Incidents</a>
-            <a href="#" className="flex items-center gap-2 text-gray-300 hover:text-amber-300"><Users className="h-5 w-5" />Users</a>
+            <Link href="/" className={`flex items-center gap-2 hover:text-amber-300 ${isActive('/') ? 'text-amber-400' : 'text-gray-300'}`}>
+              <LayoutDashboard className="h-5 w-5" />Dashboard
+            </Link>
+            <Link href="/cameras" className={`flex items-center gap-2 hover:text-amber-300 ${isActive('/cameras') ? 'text-amber-400' : 'text-gray-300'}`}>
+              <Camera className="h-5 w-5" />Cameras
+            </Link>
+            <Link href="/scenes" className={`flex items-center gap-2 hover:text-amber-300 ${isActive('/scenes') ? 'text-amber-400' : 'text-gray-300'}`}>
+              <Film className="h-5 w-5" />Scenes
+            </Link>
+            <Link href="/incidents" className={`flex items-center gap-2 hover:text-amber-300 ${isActive('/incidents') ? 'text-amber-400' : 'text-gray-300'}`}>
+              <AlertTriangle className="h-5 w-5" />Incidents
+            </Link>
+            <Link href="/users" className={`flex items-center gap-2 hover:text-amber-300 ${isActive('/users') ? 'text-amber-400' : 'text-gray-300'}`}>
+              <Users className="h-5 w-5" />Users
+            </Link>
           </div>
         </div>
         
@@ -48,11 +63,21 @@ export function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden pt-4 pb-3 border-t border-[#2a231a] mt-3">
           <div className="flex flex-col space-y-3 text-sm font-medium">
-            <a href="#" className="flex items-center gap-2 text-amber-400 py-2"><LayoutDashboard className="h-5 w-5" />Dashboard</a>
-            <a href="#" className="flex items-center gap-2 text-gray-300 py-2"><Camera className="h-5 w-5" />Cameras</a>
-            <a href="#" className="flex items-center gap-2 text-gray-300 py-2"><Film className="h-5 w-5" />Scenes</a>
-            <a href="#" className="flex items-center gap-2 text-gray-300 py-2"><AlertTriangle className="h-5 w-5" />Incidents</a>
-            <a href="#" className="flex items-center gap-2 text-gray-300 py-2"><Users className="h-5 w-5" />Users</a>
+            <Link href="/" className={`flex items-center gap-2 py-2 hover:text-amber-300 ${isActive('/') ? 'text-amber-400' : 'text-gray-300'}`} onClick={() => setIsMenuOpen(false)}>
+              <LayoutDashboard className="h-5 w-5" />Dashboard
+            </Link>
+            <Link href="/cameras" className={`flex items-center gap-2 py-2 hover:text-amber-300 ${isActive('/cameras') ? 'text-amber-400' : 'text-gray-300'}`} onClick={() => setIsMenuOpen(false)}>
+              <Camera className="h-5 w-5" />Cameras
+            </Link>
+            <Link href="/scenes" className={`flex items-center gap-2 py-2 hover:text-amber-300 ${isActive('/scenes') ? 'text-amber-400' : 'text-gray-300'}`} onClick={() => setIsMenuOpen(false)}>
+              <Film className="h-5 w-5" />Scenes
+            </Link>
+            <Link href="/incidents" className={`flex items-center gap-2 py-2 hover:text-amber-300 ${isActive('/incidents') ? 'text-amber-400' : 'text-gray-300'}`} onClick={() => setIsMenuOpen(false)}>
+              <AlertTriangle className="h-5 w-5" />Incidents
+            </Link>
+            <Link href="/users" className={`flex items-center gap-2 py-2 hover:text-amber-300 ${isActive('/users') ? 'text-amber-400' : 'text-gray-300'}`} onClick={() => setIsMenuOpen(false)}>
+              <Users className="h-5 w-5" />Users
+            </Link>
           </div>
           <div className="flex items-center space-x-3 mt-4 pt-4 border-t border-[#2a231a]">
             <Avatar className="h-8 w-8 border-2 border-amber-400">
