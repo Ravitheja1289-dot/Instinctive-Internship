@@ -10,7 +10,9 @@
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "test:deployment": "node test-deployment.js",
+    "vercel:build": "prisma generate && next build"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

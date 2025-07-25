@@ -34,7 +34,6 @@ const nextConfig = {
   },
   // Optimize for production
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['lucide-react', '@prisma/client']
   }
 }

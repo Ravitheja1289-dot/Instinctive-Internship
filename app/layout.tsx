@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { RuntimeCheck } from '@/components/runtime-check'
+import { ImmediateUI } from '@/components/immediate-ui'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -58,6 +59,7 @@ export default function RootLayout({
         }} />
       </head>
       <body className={inter.className}>
+        <ImmediateUI />
         <ErrorBoundary>
           <RuntimeCheck>
             {children}

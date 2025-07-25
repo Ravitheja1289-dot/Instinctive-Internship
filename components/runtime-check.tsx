@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LoadingFallback } from './loading-fallback'
 
 export function RuntimeCheck({ children }: { children: React.ReactNode }) {

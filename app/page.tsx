@@ -29,52 +29,7 @@ export default function Dashboard() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [isInitialized, setIsInitialized] = useState(false)
 
-  // Initialize app immediately with fallback data to ensure UI always loads
-  useEffect(() => {
-    // Immediately show demo data to prevent blank screen
-    if (!isInitialized) {
-      const initTimer = setTimeout(() => {
-        if (!isInitialized) {
-          console.log('Initializing with demo data for immediate UI display')
-          loadMockData()
-          setIsInitialized(true)
-          setLoading(false)
-          setError('Started in demo mode - attempting to connect to backend...')
-        }
-      }, 100) // Show UI almost immediately
-
-      // Try to fetch real data in parallel
-      fetchIncidents()
-        .then(() => {
-          if (isInitialized) {
-            setError(null) // Clear demo mode message if real data loads
-          }
-        })
-        .finally(() => {
-          clearTimeout(initTimer)
-          setIsInitialized(true)
-        })
-
-      return () => clearTimeout(initTimer)
-    }
-  }, [isInitialized, fetchIncidents, loadMockData])
-
-  // Backup initialization - absolutely ensure UI loads
-  useEffect(() => {
-    const emergencyFallback = setTimeout(() => {
-      if (loading && !isInitialized) {
-        console.error('Emergency fallback activated - forcing UI display')
-        loadMockData()
-        setIsInitialized(true)
-        setLoading(false)
-        setError('Emergency mode - backend connection failed')
-      }
-    }, 3000) // 3 second emergency fallback
-
-    return () => clearTimeout(emergencyFallback)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+  // Define functions first
   const loadMockData = useCallback(() => {
     const mockIncidents: Incident[] = [
       {
@@ -275,9 +230,54 @@ export default function Dashboard() {
     setIsRefreshing(false)
   }
 
+  // Initialize app immediately with fallback data to ensure UI always loads
+  useEffect(() => {
+    // Immediately show demo data to prevent blank screen
+    if (!isInitialized) {
+      const initTimer = setTimeout(() => {
+        if (!isInitialized) {
+          console.log('Initializing with demo data for immediate UI display')
+          loadMockData()
+          setIsInitialized(true)
+          setLoading(false)
+          setError('Started in demo mode - attempting to connect to backend...')
+        }
+      }, 100) // Show UI almost immediately
+
+      // Try to fetch real data in parallel
+      fetchIncidents()
+        .then(() => {
+          if (isInitialized) {
+            setError(null) // Clear demo mode message if real data loads
+          }
+        })
+        .finally(() => {
+          clearTimeout(initTimer)
+          setIsInitialized(true)
+        })
+
+      return () => clearTimeout(initTimer)
+    }
+  }, [isInitialized, fetchIncidents, loadMockData])
+
+  // Backup initialization - absolutely ensure UI loads
+  useEffect(() => {
+    const emergencyFallback = setTimeout(() => {
+      if (loading && !isInitialized) {
+        console.error('Emergency fallback activated - forcing UI display')
+        loadMockData()
+        setIsInitialized(true)
+        setLoading(false)
+        setError('Emergency mode - backend connection failed')
+      }
+    }, 3000) // 3 second emergency fallback
+
+    return () => clearTimeout(emergencyFallback)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // Always show the UI, even when loading
   const showingData = loading ? [] : incidents
-
 
 
   return (
