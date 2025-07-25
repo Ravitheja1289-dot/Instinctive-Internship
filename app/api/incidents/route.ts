@@ -165,3 +165,11 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
+// Remove any conflicting configuration that might be causing the route error
+export const config = {
+  runtime: 'edge',
+  // Ensure we don't have conflicting configuration
+  regions: ['auto'],
+  // Do not include any routing rules like 'rewrites', 'redirects', etc.
+};
