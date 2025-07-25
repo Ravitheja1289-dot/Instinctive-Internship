@@ -26,3 +26,10 @@ dist-ssr
 .next/
 .next
 out/
+
+# Vercel
+.vercel
+
+# Environment variables
+.env*.local
+.env
