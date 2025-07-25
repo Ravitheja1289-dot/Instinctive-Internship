@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Navbar } from '@/components/navbar'
 import { IncidentPlayer } from '@/components/incident-player'
 import { IncidentList } from '@/components/incident-list'
@@ -27,89 +27,197 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null)
   const [notification, setNotification] = useState<string | null>(null)
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
 
-  // Fetch incidents
+  // Initialize app immediately with fallback data to ensure UI always loads
   useEffect(() => {
-    fetchIncidents()
+    // Immediately show demo data to prevent blank screen
+    if (!isInitialized) {
+      const initTimer = setTimeout(() => {
+        if (!isInitialized) {
+          console.log('Initializing with demo data for immediate UI display')
+          loadMockData()
+          setIsInitialized(true)
+          setLoading(false)
+          setError('Started in demo mode - attempting to connect to backend...')
+        }
+      }, 100) // Show UI almost immediately
+
+      // Try to fetch real data in parallel
+      fetchIncidents()
+        .then(() => {
+          if (isInitialized) {
+            setError(null) // Clear demo mode message if real data loads
+          }
+        })
+        .finally(() => {
+          clearTimeout(initTimer)
+          setIsInitialized(true)
+        })
+
+      return () => clearTimeout(initTimer)
+    }
+  }, [isInitialized, fetchIncidents, loadMockData])
+
+  // Backup initialization - absolutely ensure UI loads
+  useEffect(() => {
+    const emergencyFallback = setTimeout(() => {
+      if (loading && !isInitialized) {
+        console.error('Emergency fallback activated - forcing UI display')
+        loadMockData()
+        setIsInitialized(true)
+        setLoading(false)
+        setError('Emergency mode - backend connection failed')
+      }
+    }, 3000) // 3 second emergency fallback
+
+    return () => clearTimeout(emergencyFallback)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const fetchIncidents = async () => {
-    try {
-      setError(null)
-      const response = await fetch('/api/incidents')
-      if (response.ok) {
-        const data = await response.json()
-        setIncidents(data)
-        // Auto-select the first unresolved incident
-        const firstUnresolved = data.find((incident: Incident) => !incident.resolved)
-        if (firstUnresolved) {
-          setSelectedIncident(firstUnresolved)
-        }
-      } else {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-      }
-    } catch (error) {
-      console.error('Error fetching incidents:', error)
-      // Instead of setting error state, show UI with mock data
-      loadMockData()
-      setError(error instanceof Error ? error.message : 'Failed to fetch incidents')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const loadMockData = () => {
+  const loadMockData = useCallback(() => {
     const mockIncidents: Incident[] = [
       {
-        id: 'mock-1',
-        type: 'Motion Detected',
-        tsStart: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-        tsEnd: new Date(Date.now() - 28 * 60 * 1000).toISOString(),
-        thumbnailUrl: '/placeholder-thumbnail.jpg',
+        id: 'demo-1',
+        type: 'Unauthorised Access',
+        tsStart: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+        tsEnd: new Date(Date.now() - 12 * 60 * 1000).toISOString(),
+        thumbnailUrl: '/thumbnails/incident-unauthorised-access.svg',
         resolved: false,
         camera: {
-          id: 'mock-cam-1',
+          id: 'demo-cam-1',
           name: 'Front Entrance',
-          location: 'Building A - Main Floor'
+          location: 'Building A - Main Lobby'
         }
       },
       {
-        id: 'mock-2',
+        id: 'demo-2',
         type: 'Face Recognised',
-        tsStart: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-        tsEnd: new Date(Date.now() - 58 * 60 * 1000).toISOString(),
-        thumbnailUrl: '/placeholder-thumbnail.jpg',
+        tsStart: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+        tsEnd: new Date(Date.now() - 43 * 60 * 1000).toISOString(),
+        thumbnailUrl: '/thumbnails/incident-face-recognised.svg',
         resolved: true,
         camera: {
-          id: 'mock-cam-2',
-          name: 'Reception Area',
+          id: 'demo-cam-2',
+          name: 'Reception Desk',
           location: 'Building A - Ground Floor'
         }
       },
       {
-        id: 'mock-3',
-        type: 'Perimeter Breach',
-        tsStart: new Date(Date.now() - 90 * 60 * 1000).toISOString(),
-        tsEnd: new Date(Date.now() - 87 * 60 * 1000).toISOString(),
-        thumbnailUrl: '/placeholder-thumbnail.jpg',
+        id: 'demo-3',
+        type: 'Suspicious Activity',
+        tsStart: new Date(Date.now() - 75 * 60 * 1000).toISOString(),
+        tsEnd: new Date(Date.now() - 72 * 60 * 1000).toISOString(),
+        thumbnailUrl: '/thumbnails/incident-suspicious-activity.svg',
         resolved: false,
         camera: {
-          id: 'mock-cam-3',
-          name: 'Parking Lot',
+          id: 'demo-cam-3',
+          name: 'Parking Area',
           location: 'Building A - External'
+        }
+      },
+      {
+        id: 'demo-4',
+        type: 'Perimeter Breach',
+        tsStart: new Date(Date.now() - 105 * 60 * 1000).toISOString(),
+        tsEnd: new Date(Date.now() - 102 * 60 * 1000).toISOString(),
+        thumbnailUrl: '/thumbnails/incident-perimeter-breach.svg',
+        resolved: true,
+        camera: {
+          id: 'demo-cam-4',
+          name: 'Back Gate',
+          location: 'Building A - Rear Access'
+        }
+      },
+      {
+        id: 'demo-5',
+        type: 'Gun Threat',
+        tsStart: new Date(Date.now() - 135 * 60 * 1000).toISOString(),
+        tsEnd: new Date(Date.now() - 132 * 60 * 1000).toISOString(),
+        thumbnailUrl: '/thumbnails/incident-gun-threat.svg',
+        resolved: true,
+        camera: {
+          id: 'demo-cam-5',
+          name: 'Security Checkpoint',
+          location: 'Building A - Main Entrance'
         }
       }
     ]
     
     setIncidents(mockIncidents)
-    setSelectedIncident(mockIncidents.find(i => !i.resolved) || mockIncidents[0])
-  }
+    const firstUnresolved = mockIncidents.find(i => !i.resolved)
+    setSelectedIncident(firstUnresolved || mockIncidents[0])
+  }, [])
+
+  const fetchIncidents = useCallback(async () => {
+    try {
+      setError(null)
+      // Add timeout to prevent hanging requests in deployment
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 8000) // 8 second timeout
+      
+      const response = await fetch('/api/incidents', {
+        signal: controller.signal,
+        headers: {
+          'Cache-Control': 'no-cache',
+        }
+      })
+      
+      clearTimeout(timeoutId)
+      
+      if (response.ok) {
+        const data = await response.json()
+        setIncidents(data || [])
+        // Auto-select the first unresolved incident
+        const firstUnresolved = data?.find((incident: Incident) => !incident.resolved)
+        if (firstUnresolved) {
+          setSelectedIncident(firstUnresolved)
+        } else if (data?.length > 0) {
+          setSelectedIncident(data[0])
+        }
+      } else {
+        throw new Error(`Backend Error: ${response.status} - ${response.statusText}`)
+      }
+    } catch (error) {
+      console.error('Error fetching incidents:', error)
+      // Always load mock data to ensure UI is functional
+      loadMockData()
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          setError('Connection timeout - showing demo data')
+        } else {
+          setError(`${error.message} - showing demo data`)
+        }
+      } else {
+        setError('Backend unavailable - showing demo data')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [loadMockData])
+
+
 
   const handleResolveIncident = async (incidentId: string) => {
+    const incident = incidents.find(i => i.id === incidentId)
+    if (!incident) return
+
     try {
+      // Add timeout for resolve requests too
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+      
       const response = await fetch(`/api/incidents/${incidentId}/resolve`, {
         method: 'PATCH',
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+        }
       })
+      
+      clearTimeout(timeoutId)
       
       if (response.ok) {
         const updatedIncident = await response.json()
@@ -130,20 +238,20 @@ export default function Dashboard() {
         setNotification(`Incident ${updatedIncident.resolved ? 'resolved' : 'reopened'} successfully`)
         setTimeout(() => setNotification(null), 3000)
       } else {
-        throw new Error(`Failed to resolve incident: ${response.statusText}`)
+        throw new Error(`Failed to update incident: ${response.statusText}`)
       }
     } catch (error) {
       console.error('Error resolving incident:', error)
       
-      // For demo mode, still update the UI locally
+      // Always update the UI locally for better UX (demo mode)
       const updatedIncident = {
-        ...incidents.find(i => i.id === incidentId)!,
-        resolved: !incidents.find(i => i.id === incidentId)?.resolved
+        ...incident,
+        resolved: !incident.resolved
       }
       
       setIncidents(prev => 
-        prev.map(incident => 
-          incident.id === incidentId ? updatedIncident : incident
+        prev.map(inc => 
+          inc.id === incidentId ? updatedIncident : inc
         )
       )
       
@@ -151,8 +259,13 @@ export default function Dashboard() {
         setSelectedIncident(updatedIncident)
       }
       
-      setNotification(`Incident ${updatedIncident.resolved ? 'resolved' : 'reopened'} (demo mode)`)
-      setTimeout(() => setNotification(null), 3000)
+      const action = updatedIncident.resolved ? 'resolved' : 'reopened'
+      const message = error instanceof Error && error.name === 'AbortError' 
+        ? `Incident ${action} locally (connection timeout)`
+        : `Incident ${action} locally (backend unavailable)`
+        
+      setNotification(message)
+      setTimeout(() => setNotification(null), 4000)
     }
   }
 

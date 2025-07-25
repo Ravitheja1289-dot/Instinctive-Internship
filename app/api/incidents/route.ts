@@ -45,31 +45,55 @@ export async function GET(request: NextRequest) {
     if (offset) {
       queryOptions.skip = parseInt(offset)
     }
-    
-    const incidents = await prisma.incident.findMany(queryOptions)
 
-    // Also get total count for pagination
-    const totalCount = await prisma.incident.count({
-      where: Object.keys(where).length > 0 ? where : undefined,
+    // Add timeout protection for database queries
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Database query timeout')), 8000)
     })
+
+    const incidents = await Promise.race([
+      prisma.incident.findMany(queryOptions),
+      timeoutPromise
+    ]) as any[]
+
+    // Also get total count for pagination (with timeout)
+    const totalCount = await Promise.race([
+      prisma.incident.count({
+        where: Object.keys(where).length > 0 ? where : undefined,
+      }),
+      timeoutPromise
+    ]) as number
 
     // For backward compatibility with the frontend, return just the incidents array
     // if no pagination parameters are provided
     if (!limit && !offset) {
-      return NextResponse.json(incidents)
+      return NextResponse.json(incidents || [])
     }
     
     return NextResponse.json({
-      incidents,
-      totalCount,
-      hasMore: limit ? incidents.length === parseInt(limit) : false,
+      incidents: incidents || [],
+      totalCount: totalCount || 0,
+      hasMore: limit ? (incidents?.length || 0) === parseInt(limit) : false,
     })
   } catch (error) {
     console.error('Error fetching incidents:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch incidents' },
-      { status: 500 }
-    )
+    
+    // Return empty array instead of error to prevent frontend crashes
+    const errorResponse = {
+      incidents: [],
+      totalCount: 0,
+      hasMore: false,
+      error: error instanceof Error ? error.message : 'Database unavailable'
+    }
+    
+    // Return 200 with empty data instead of 500 to allow frontend to handle gracefully
+    return NextResponse.json(errorResponse, { 
+      status: 200,
+      headers: {
+        'X-Database-Status': 'unavailable',
+        'Cache-Control': 'no-store'
+      }
+    })
   }
 }
 

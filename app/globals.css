@@ -55,5 +55,40 @@
   }
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  /* Ensure app is always visible even with errors */
+  html {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #19181c, #23201e, #2a231a);
+  }
+  
+  /* Loading states */
+  .loading-shimmer {
+    background: linear-gradient(90deg, #ffffff1a 25%, #ffffff2a 50%, #ffffff1a 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+  
+  /* Ensure text is always readable */
+  .error-fallback {
+    background: #19181c;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
   }
 }

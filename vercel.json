@@ -10,5 +10,25 @@
       "source": "/camera-footage/(.*)",
       "destination": "/api/video/$1"
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/fallback.html",
+      "dest": "/fallback.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

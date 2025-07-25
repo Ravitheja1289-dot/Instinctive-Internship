@@ -24,6 +24,19 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  // Improve build performance and error handling
+  reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
+  // Handle API timeouts better in production
+  serverRuntimeConfig: {
+    maxDuration: 10
+  },
+  // Optimize for production
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', '@prisma/client']
+  }
 }
 
 module.exports = nextConfig
